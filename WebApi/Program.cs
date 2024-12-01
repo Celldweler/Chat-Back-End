@@ -31,6 +31,8 @@ builder.Services.AddSingleton(provider =>
         new AzureKeyCredential(configuration["AzureAITextAnalytics:Key"]!)
     );
 });
+builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
+
 
 builder.Services.AddTransient<IChatService, ChatService>();
 builder.Services.AddTransient<ITextSentimentAnalysisService, AzureTextSentimentAnalysisService>();
