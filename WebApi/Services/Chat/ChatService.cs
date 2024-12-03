@@ -36,7 +36,7 @@ public class ChatService : IChatService
         }
 
         var newMessage = mapper.Map<Message>(message);
-        newMessage.TextSentyment = await sentimentAnalysisService.AnalyzeSentimentAsync(message.Text);
+        newMessage.TextSentiment = await sentimentAnalysisService.AnalyzeSentimentAsync(message.Text);
 
         await context.AddAsync(newMessage);
         await context.SaveChangesAsync();

@@ -7,7 +7,7 @@ public class ApplicationDataContext : DbContext
 {
     public ApplicationDataContext(DbContextOptions options) : base(options)
     {
-    }
+    }    
 
     public DbSet<Message> Messages { get; set; }
 }

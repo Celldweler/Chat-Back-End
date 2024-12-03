@@ -41,7 +41,7 @@ namespace WebApi.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("TextSentyment")
+                    b.Property<string>("TextSentiment")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 

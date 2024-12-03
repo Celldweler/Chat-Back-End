@@ -12,7 +12,7 @@ using WebApi.Data;
 namespace WebApi.Migrations
 {
     [DbContext(typeof(ApplicationDataContext))]
-    [Migration("20241201140322_init")]
+    [Migration("20241203125159_init")]
     partial class init
     {
         /// <inheritdoc />
@@ -44,7 +44,7 @@ namespace WebApi.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("TextSentyment")
+                    b.Property<string>("TextSentiment")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 

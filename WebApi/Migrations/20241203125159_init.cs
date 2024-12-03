@@ -18,7 +18,7 @@ namespace WebApi.Migrations
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
                     Text = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    TextSentyment = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    TextSentiment = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     CreatedAt = table.Column<DateTime>(type: "datetime2", nullable: false),
                     Sender = table.Column<string>(type: "nvarchar(max)", nullable: false)
                 },

@@ -6,7 +6,7 @@ public class Message
 
     public string Text { get; set; } = string.Empty;
 
-    public string TextSentyment { get; set; }
+    public string TextSentiment { get; set; }
 
     public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
 

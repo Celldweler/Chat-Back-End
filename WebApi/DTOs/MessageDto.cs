@@ -6,7 +6,7 @@ public class MessageDto
 
     public string Text { get; set; }
 
-    public string TextSentyment { get; set; }
+    public string TextSentiment { get; set; }
 
     public DateTime CreatedAt { get; set; }
 
