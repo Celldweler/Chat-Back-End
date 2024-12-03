@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.SignalR;
+﻿using AutoMapper;
+using Microsoft.AspNetCore.SignalR;
 using WebApi.DTOs;
 using WebApi.Models;
 using WebApi.Services.Chat;
@@ -18,16 +19,14 @@ public class ChatHub : Hub
         this.chatService = chatService;
     }
 
-    public async Task SendMessage(string user, string message)
+    public async Task SendMessage(string senderName, string text)
     {
         logger.LogInformation("ConnectionId: {0}", Context.ConnectionId);
-        logger.LogInformation("Recieved data: {0} from user: {1}", message, user);
+        logger.LogInformation("Recieved data: {0} from user: {1}", text, senderName);
 
-        var newMessage = new CreateMessageDto(message, user);
-        await chatService.CreateMessageAsync(newMessage);
-
-        await Clients.Others.SendAsync("ReceiveMessage", user, message);
-
+        var newMessage = await chatService.CreateMessageAsync(new CreateMessageDto(text, senderName));
+        
+        await Clients.All.SendAsync("ReceiveMessage", newMessage);
     }
 
     public override Task OnConnectedAsync()

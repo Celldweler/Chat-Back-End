@@ -6,5 +6,5 @@ public interface IChatService
 {
     Task<IEnumerable<MessageDto>> GetAllMessagesAsync();
 
-    Task CreateMessageAsync(CreateMessageDto message);
+    Task<MessageDto> CreateMessageAsync(CreateMessageDto message);
 }

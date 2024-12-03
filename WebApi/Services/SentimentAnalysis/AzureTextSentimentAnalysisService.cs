@@ -12,8 +12,13 @@ public class AzureTextSentimentAnalysisService : ITextSentimentAnalysisService
         this.textAnalyticsClient = textAnalyticsClient;
     }
 
-    public Task<string> AnalyzeSentimentAsync(string text)
+    public async Task<string> AnalyzeSentimentAsync(string text)
     {
-        throw new NotImplementedException();
+        var language = (await textAnalyticsClient.DetectLanguageAsync(text))?.Value.Iso6391Name
+            ?? throw new ArgumentNullException();
+
+        var sentiment = await textAnalyticsClient.AnalyzeSentimentAsync(text, language);
+
+        return sentiment.Value.Sentiment.ToString();
     }
 }

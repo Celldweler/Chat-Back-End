@@ -3,6 +3,7 @@ using Microsoft.EntityFrameworkCore;
 using WebApi.Data;
 using WebApi.DTOs;
 using WebApi.Models;
+using WebApi.Services.SentimentAnalysis;
 
 namespace WebApi.Services.Chat;
 
@@ -11,24 +12,35 @@ public class ChatService : IChatService
     private readonly IMapper mapper;
     private readonly ILogger<ChatService> logger;
     private readonly ApplicationDataContext context;
+    private readonly ITextSentimentAnalysisService sentimentAnalysisService;
 
     public ChatService(
         IMapper mapper,
         ILogger<ChatService> logger,
-        ApplicationDataContext context)
+        ApplicationDataContext context,
+        ITextSentimentAnalysisService sentimentAnalysisService)
     {
         this.mapper = mapper;
         this.logger = logger;
         this.context = context;
+        this.sentimentAnalysisService = sentimentAnalysisService;
     }
 
-    public async Task CreateMessageAsync(CreateMessageDto message)
+    public async Task<MessageDto> CreateMessageAsync(CreateMessageDto message)
     {
+        ArgumentNullException.ThrowIfNull(message, nameof(message));
+        if (string.IsNullOrEmpty(message.Text) || string.IsNullOrEmpty(message.Sender))
+        {
+            throw new ArgumentNullException();
+        }
+
         var newMessage = mapper.Map<Message>(message);
-        newMessage.TextSentyment = "stub";
+        newMessage.TextSentyment = await sentimentAnalysisService.AnalyzeSentimentAsync(message.Text);
 
         await context.AddAsync(newMessage);
         await context.SaveChangesAsync();
+
+        return mapper.Map<MessageDto>(newMessage);
     }
 
     public async Task<IEnumerable<MessageDto>> GetAllMessagesAsync()
