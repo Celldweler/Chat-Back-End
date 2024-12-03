@@ -3,10 +3,15 @@
 public interface ITextSentimentAnalysisService
 {
     /// <summary>
-    /// Runs a predictive model to identify the positive, negative, neutral
-    /// or mixed sentiment contained in the text.
+    /// Analyzes the sentiment of the provided text.
     /// </summary>
     /// <param name="text">The text to analyze.</param>
-    /// <returns>The predicted sentiment for a given text.</returns>
+    /// <returns>
+    /// A string representation of the sentiment analysis result. 
+    /// Possible values include "Positive", "Neutral", "Negative", or "Mixed".
+    /// </returns>
+    /// /// <exception cref="ArgumentNullException">
+    /// Thrown if the detected language is null or the language detection fails.
+    /// </exception>
     Task<string> AnalyzeSentimentAsync(string text);
 }

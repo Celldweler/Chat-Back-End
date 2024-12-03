@@ -26,6 +26,7 @@ public class ChatService : IChatService
         this.sentimentAnalysisService = sentimentAnalysisService;
     }
 
+    /// <inheritdoc/>
     public async Task<MessageDto> CreateMessageAsync(CreateMessageDto message)
     {
         ArgumentNullException.ThrowIfNull(message, nameof(message));
@@ -43,6 +44,7 @@ public class ChatService : IChatService
         return mapper.Map<MessageDto>(newMessage);
     }
 
+    /// <inheritdoc/>
     public async Task<IEnumerable<MessageDto>> GetAllMessagesAsync()
     {
         var messages = await context.Messages.ToListAsync();
