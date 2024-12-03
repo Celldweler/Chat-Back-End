@@ -4,6 +4,5 @@ public class AppConstants
 {
     public const string CorsPolicy = "AppCorsPolicy";
 
-    public const string PathToChatHub = "/chat";
-
+    public const string PathToChatHub = "/chathub";
 }

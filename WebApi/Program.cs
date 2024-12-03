@@ -4,7 +4,9 @@ using Microsoft.EntityFrameworkCore;
 using WebApi;
 using WebApi.Configuration;
 using WebApi.Data;
+using WebApi.Extensions;
 using WebApi.Hubs;
+using WebApi.Middleware;
 using WebApi.Services.Chat;
 using WebApi.Services.SentimentAnalysis;
 
@@ -21,7 +23,7 @@ builder.Services.AddDbContext<ApplicationDataContext>(options =>
 {
     options.UseSqlServer(
         configuration.GetConnectionString(
-            environment.IsDevelopment() ? "SqlServer" : "AzureSQL"));    
+            environment.IsDevelopment() ? "SqlServer" : "AzureSQL"));
 });
 builder.Services.Configure<TextAnalyticsOptions>(configuration.GetSection(TextAnalyticsOptions.Section));
 builder.Services.AddSingleton(provider =>
@@ -31,6 +33,8 @@ builder.Services.AddSingleton(provider =>
         new AzureKeyCredential(configuration["AzureAITextAnalytics:Key"]!)
     );
 });
+builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
+
 
 builder.Services.AddTransient<IChatService, ChatService>();
 builder.Services.AddTransient<ITextSentimentAnalysisService, AzureTextSentimentAnalysisService>();
@@ -45,40 +49,16 @@ builder.Services.AddCors(confg =>
 
 var app = builder.Build();
 
-if (app.Environment.IsDevelopment())
-{
-    app.UseSwagger();
-    app.UseSwaggerUI();
-}
-
+app.UseMiddleware<ExceptionMiddleware>();
+app.UseSwagger();
+app.UseSwaggerUI();
 app.UseHttpsRedirection();
-
 app.UseAuthorization();
 app.UseCors(AppConstants.CorsPolicy);
 
 app.MapControllers();
 app.MapHub<ChatHub>(AppConstants.PathToChatHub);
 
-ApplyDbMigrations(app.Services);
+app.Services.ApplyDbMigrations();
 
 app.Run();
-
-
-void ApplyDbMigrations(IServiceProvider serviceProvider)
-{
-    using var scope = serviceProvider.GetRequiredService<IServiceScopeFactory>().CreateScope();
-    var ctx = scope.ServiceProvider.GetRequiredService<ApplicationDataContext>();
-    var logger = scope.ServiceProvider.GetRequiredService<ILogger<Program>>();
-
-    try
-    {
-        logger.LogInformation("Applying database migrations...");
-        ctx.Database.Migrate();
-        logger.LogInformation("Database migrations applied successfully.");
-    }
-    catch (Exception ex)
-    {
-        logger.LogInformation($"Migration failed: {ex.Message}");
-        throw;
-    }
-}

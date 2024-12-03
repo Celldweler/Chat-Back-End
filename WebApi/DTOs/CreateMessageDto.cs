@@ -1,8 +1,3 @@
 ﻿namespace WebApi.DTOs;
 
-public class CreateMessageDto
-{
-    public string Text { get; set; } = string.Empty;
-
-    public string Sender { get; set; }
-}
+public record CreateMessageDto(string Text, string Sender);
